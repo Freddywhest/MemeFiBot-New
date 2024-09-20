@@ -46,7 +46,7 @@ class Register {
       this.#apiHash,
       {
         connectionRetries: 5,
-        deviceModel: "Freddy Bots",
+        deviceModel: os.type() + " - Freddy Bots",
         appVersion: "1.0.0",
         systemVersion: "1.0.0",
         langCode: "en",

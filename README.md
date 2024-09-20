@@ -10,6 +10,7 @@
 | Starting TapBot                                                |    ✅     |
 | Claiming TapBot reward every 3 hours                           |    ✅     |
 | Claiming Daily Combo                                           |    ✅     |
+| Claiming Tasks                                                 |    ✅     |
 | Spinning game                                                  |    ✅     |
 | User Agent for each session                                    |    ✅     |
 | Multithreading                                                 |    ✅     |
@@ -42,6 +43,7 @@
 | **SLEEP_BETWEEN_REQUESTS**      | Random delay between taps in seconds (eg [10,26])                                                               |
 | **AUTO_BUY_TAPBOT**             | Whether to purchase tapbot automatically (True / False)                                                         |
 | **AUTO_SPIN**                   | Whether to spin automatically (True / False)                                                                    |
+| **AUTO_COMPLETE_TASKS**         | Whether to should claim tasks (True / False)                                                                    |
 | **AUTO_CLAIM_AND_START_TAPBOT** | Whether the bot should to claim and start tapbot (True / False)                                                 |
 | **USE_PROXY_FROM_FILE**         | Whether to use proxy from the `bot/config/proxies.js` file (True / False)                                       |
 | **USE_REGISTRATION_PROXY**      | Whether to use proxy from the `bot/config/registrationProxy.js` file when creating a new session (True / False) |
