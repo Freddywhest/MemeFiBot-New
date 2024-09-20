@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  bot:
+    container_name: "BunnyAppBot-Bot"
+    build:
+      context: .
+    stop_signal: SIGINT
+    restart: unless-stopped
+    command: "node index.js"
+    volumes:
+      - .:/app
+      - ./sessions:/app/sessions
+    env_file:
+      - .env
