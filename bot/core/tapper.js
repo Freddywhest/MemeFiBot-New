@@ -900,12 +900,16 @@ class Tapper {
           tap_count++;
         }
 
+        let task_count = 0;
         //tasks
         if (settings.AUTO_COMPLETE_TASKS) {
           const campaigns = await this.api.get_campaigns(http_client);
 
           if (!_.isEmpty(campaigns)) {
             for (const campaign of campaigns) {
+              if (_.gte(task_count, 10)) {
+                break;
+              }
               const get_tasks_list = await this.api.get_tasks_list(
                 http_client,
                 campaign?.id
@@ -984,6 +988,7 @@ class Tapper {
                   }
                 }
               }
+              task_count++;
             }
           }
         }
