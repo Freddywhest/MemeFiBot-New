@@ -14,7 +14,7 @@
     "cloudscraper": "^4.6.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "fdy-scraping": "^1.0.2",
+    "fdy-scraping": "^1.0.3",
     "fdy-tmp": "^1.0.4",
     "form-data": "^4.0.0",
     "lodash": "^4.17.21",

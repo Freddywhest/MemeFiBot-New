@@ -16,7 +16,6 @@ const fdy = require("fdy-scraping");
 const FdyTmp = require("fdy-tmp");
 const { UpgradableBoostType, FreeBoostType } = require("../utils/boost");
 const { calculatePrice, generateVectorArray } = require("../utils/helper");
-const { setEngine } = require("crypto");
 
 class Tapper {
   constructor(tg_client) {
@@ -149,7 +148,7 @@ class Tapper {
               await this.tg_client.disconnect();
               await this.tg_client.destroy();
             }
-            await sleep(5);
+            await sleep(_.random(2, 10));
             return jsonData;
           } else {
             tmp.deleteJsonElement(this.session_name);
@@ -194,7 +193,7 @@ class Tapper {
         `<ye>[${this.bot_name}]</ye> | ${this.session_name} | 💾 Storing data in cache...`
       );
 
-      await sleep(5);
+      await sleep(_.random(2, 10));
 
       tmp
         .addJson(
@@ -271,7 +270,7 @@ class Tapper {
         await this.tg_client.disconnect();
         await this.tg_client.destroy();
       }
-      await sleep(1);
+      await sleep(_.random(2, 10));
       if (!this.runOnce) {
         logger.info(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | 🚀 Starting bot...`
@@ -330,7 +329,7 @@ class Tapper {
     }
   }
 
-  async run(proxy) {
+  async run(proxy, index) {
     let http_client;
     let access_token_created_time = 0;
     let profile_data;
@@ -387,7 +386,7 @@ class Tapper {
             "authorization"
           ] = `Bearer ${access_token?.access_token}`;
           access_token_created_time = currentTime;
-          await sleep(2);
+          await sleep(_.random(2, 6));
         }
 
         profile_data = await this.api.profile_data(http_client);
@@ -444,7 +443,7 @@ class Tapper {
             game_config = new_boss;
             balance = game_config?.coinsAmount;
             boss_current_health = game_config?.currentBoss?.currentHealth;
-            await sleep(3);
+            await sleep(_.random(15, 30));
           } else {
             continue;
           }
@@ -457,11 +456,15 @@ class Tapper {
           _.lt(spinning_count, 10) &&
           settings.AUTO_SPIN
         ) {
+          const spin_sleep = _.add(
+            sleep.generateDelays(10)[_.random(0, 9)],
+            _.random(12, 30)
+          );
           logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 20 seconds before spinning slot machine`
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${spin_sleep} seconds before spinning slot machine`
           );
 
-          await sleep(20);
+          await sleep(spin_sleep);
           //spin slot machine
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
@@ -473,7 +476,7 @@ class Tapper {
               game_config = new_boss;
               balance = game_config?.coinsAmount;
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(3);
+              await sleep(_.random(14, 23));
             } else {
               break;
             }
@@ -503,7 +506,7 @@ class Tapper {
             if (retries >= 3) {
               break;
             }
-            await sleep(5);
+            await sleep(_.random(2, 5));
             continue;
           }
           if (
@@ -552,7 +555,7 @@ class Tapper {
           spinning_count++;
         }
 
-        await sleep(3);
+        await sleep(_.random(2, 6));
 
         balance = game_config?.coinsAmount;
 
@@ -580,7 +583,7 @@ class Tapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(2, 6));
         }
 
         tapbot_config = await this.api.tapbot_config(http_client);
@@ -633,13 +636,17 @@ class Tapper {
 
         while (
           _.gt(turbo_boost_count, 0) &&
-          _.lte(turbo_apply_count, 10) &&
+          _.lte(turbo_apply_count, 5) &&
           settings.AUTO_APPLY_TURBO
         ) {
-          logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping 20 seconds before applying turbo boost...`
+          const turbo_sleep = _.add(
+            sleep.generateDelays(10)[_.random(0, 9)],
+            _.random(12, 30)
           );
-          await sleep(20);
+          logger.info(
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping ${turbo_sleep} seconds before applying turbo boost...`
+          );
+          await sleep(turbo_sleep);
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
             if (
@@ -650,7 +657,8 @@ class Tapper {
               game_config = new_boss;
               balance = game_config?.coinsAmount;
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(3);
+              await sleep(_.random(10, 20));
+              continue;
             } else {
               break;
             }
@@ -687,7 +695,7 @@ class Tapper {
             logger.success(
               `<ye>[${this.bot_name}]</ye> | ${this.session_name} | 🚀 Turbo boost applied`
             );
-            await sleep(2);
+            await sleep(_.random(2, 6));
             const data = {
               payload: {
                 nonce,
@@ -708,7 +716,7 @@ class Tapper {
                 game_config = new_boss;
                 balance = game_config?.coinsAmount;
                 boss_current_health = game_config?.currentBoss?.currentHealth;
-                await sleep(3);
+                await sleep(_.random(10, 20));
               } else {
                 break;
               }
@@ -736,6 +744,8 @@ class Tapper {
                 ).toLocaleString()}</vo>`
               );
             }
+          } else {
+            break;
           }
           turbo_apply_count++;
         }
@@ -755,7 +765,7 @@ class Tapper {
             game_config = new_boss;
             balance = game_config?.coinsAmount;
             boss_current_health = game_config?.currentBoss?.currentHealth;
-            await sleep(3);
+            await sleep(_.random(10, 25));
           } else {
             break;
           }
@@ -767,10 +777,14 @@ class Tapper {
           _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
           _.lte(tap_count, 10)
         ) {
-          logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 20 seconds before tapping...`
+          const tap_sleep = _.add(
+            sleep.generateDelays(10)[_.random(0, 9)],
+            _.random(11, 30)
           );
-          await sleep(20);
+          logger.info(
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${tap_sleep} seconds before tapping...`
+          );
+          await sleep(tap_sleep);
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
             if (
@@ -781,7 +795,7 @@ class Tapper {
               game_config = new_boss;
               balance = game_config?.coinsAmount;
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(3);
+              await sleep(_.random(15, 25));
             } else {
               break;
             }
@@ -861,7 +875,7 @@ class Tapper {
             logger.info(
               `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 5 seconds before applying energy boost...`
             );
-            await sleep(5);
+            await sleep(_.random(5, 10));
             const apply_energy = await this.api.apply_boost(
               http_client,
               FreeBoostType.ENERGY
@@ -897,13 +911,35 @@ class Tapper {
                 campaign?.id
               );
 
+              const campaign_sleep = _.add(
+                sleep.generateDelays(campaigns.length + 1)[
+                  _.random(0, campaigns.length - 1)
+                ],
+                _.random(20, 30)
+              );
+              logger.info(
+                `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${campaign_sleep} seconds before getting tasks...`
+              );
+
+              await sleep(campaign_sleep);
+
               if (!_.isEmpty(get_tasks_list)) {
                 for (const task of get_tasks_list) {
                   if (task?.status?.toLowerCase() !== "verification") {
+                    await sleep(_.random(5, 15));
                     await this.api.verify_campaign(http_client, task?.id);
                   }
+                  const tasks_sleep = _.add(
+                    sleep.generateDelays(get_tasks_list.length + 1)[
+                      _.random(0, get_tasks_list.length - 1)
+                    ],
+                    _.random(10, 30)
+                  );
+                  logger.info(
+                    `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${campaign_sleep} seconds before verifying task...`
+                  );
 
-                  await sleep(2);
+                  await sleep(tasks_sleep);
 
                   const get_task_by_id = await this.api.get_task_by_id(
                     http_client,
@@ -915,7 +951,9 @@ class Tapper {
                       get_task_by_id?.verificationAvailableAt
                     ).diff(moment(), "seconds");
                     const sleep_time_task =
-                      task_available_at > 0 ? task_available_at + 5 : 10;
+                      task_available_at > 0
+                        ? task_available_at + 5
+                        : _.random(5, 15);
 
                     logger.info(
                       `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${sleep_time_task} seconds before claiming task...`
@@ -975,7 +1013,7 @@ class Tapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(5, 15));
         }
 
         if (
@@ -1003,7 +1041,7 @@ class Tapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(5, 15));
         }
 
         if (
@@ -1031,7 +1069,7 @@ class Tapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(5, 15));
         }
       } catch (error) {
         logger.error(

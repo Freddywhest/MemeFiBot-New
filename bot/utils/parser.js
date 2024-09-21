@@ -14,7 +14,7 @@ class Parser {
   }
 
   #decodeUrlEncodedString(str) {
-    return decodeURIComponent(str.replace(/\+/g, " "));
+    return decodeURIComponent(str?.replace(/\+/g, " "));
   }
 
   /**

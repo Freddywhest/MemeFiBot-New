@@ -170,7 +170,7 @@ class NonSessionTapper {
     return "Unknown";
   }
 
-  async run(proxy) {
+  async run(proxy, index) {
     let http_client;
     let access_token_created_time = 0;
     let profile_data;
@@ -227,7 +227,7 @@ class NonSessionTapper {
             "authorization"
           ] = `Bearer ${access_token?.access_token}`;
           access_token_created_time = currentTime;
-          await sleep(2);
+          await sleep(_.random(2, 6));
         }
 
         profile_data = await this.api.profile_data(http_client);
@@ -284,7 +284,7 @@ class NonSessionTapper {
             game_config = new_boss;
             balance = game_config?.coinsAmount;
             boss_current_health = game_config?.currentBoss?.currentHealth;
-            await sleep(3);
+            await sleep(_.random(15, 30));
           } else {
             continue;
           }
@@ -297,11 +297,15 @@ class NonSessionTapper {
           _.lt(spinning_count, 10) &&
           settings.AUTO_SPIN
         ) {
+          const spin_sleep = _.add(
+            sleep.generateDelays(10)[_.random(0, 9)],
+            _.random(12, 30)
+          );
           logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 20 seconds before spinning slot machine`
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${spin_sleep} seconds before spinning slot machine`
           );
 
-          await sleep(20);
+          await sleep(spin_sleep);
           //spin slot machine
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
@@ -313,7 +317,7 @@ class NonSessionTapper {
               game_config = new_boss;
               balance = game_config?.coinsAmount;
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(3);
+              await sleep(_.random(14, 23));
             } else {
               break;
             }
@@ -343,7 +347,7 @@ class NonSessionTapper {
             if (retries >= 3) {
               break;
             }
-            await sleep(5);
+            await sleep(_.random(2, 5));
             continue;
           }
           if (
@@ -392,7 +396,7 @@ class NonSessionTapper {
           spinning_count++;
         }
 
-        await sleep(3);
+        await sleep(_.random(2, 6));
 
         balance = game_config?.coinsAmount;
 
@@ -420,7 +424,7 @@ class NonSessionTapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(2, 6));
         }
 
         tapbot_config = await this.api.tapbot_config(http_client);
@@ -473,13 +477,17 @@ class NonSessionTapper {
 
         while (
           _.gt(turbo_boost_count, 0) &&
-          _.lte(turbo_apply_count, 10) &&
+          _.lte(turbo_apply_count, 5) &&
           settings.AUTO_APPLY_TURBO
         ) {
-          logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping 20 seconds before applying turbo boost...`
+          const turbo_sleep = _.add(
+            sleep.generateDelays(10)[_.random(0, 9)],
+            _.random(12, 30)
           );
-          await sleep(20);
+          logger.info(
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping ${turbo_sleep} seconds before applying turbo boost...`
+          );
+          await sleep(turbo_sleep);
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
             if (
@@ -490,7 +498,8 @@ class NonSessionTapper {
               game_config = new_boss;
               balance = game_config?.coinsAmount;
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(3);
+              await sleep(_.random(10, 20));
+              continue;
             } else {
               break;
             }
@@ -527,7 +536,7 @@ class NonSessionTapper {
             logger.success(
               `<ye>[${this.bot_name}]</ye> | ${this.session_name} | 🚀 Turbo boost applied`
             );
-            await sleep(2);
+            await sleep(_.random(2, 6));
             const data = {
               payload: {
                 nonce,
@@ -548,7 +557,7 @@ class NonSessionTapper {
                 game_config = new_boss;
                 balance = game_config?.coinsAmount;
                 boss_current_health = game_config?.currentBoss?.currentHealth;
-                await sleep(3);
+                await sleep(_.random(10, 20));
               } else {
                 break;
               }
@@ -576,6 +585,8 @@ class NonSessionTapper {
                 ).toLocaleString()}</vo>`
               );
             }
+          } else {
+            break;
           }
           turbo_apply_count++;
         }
@@ -595,7 +606,7 @@ class NonSessionTapper {
             game_config = new_boss;
             balance = game_config?.coinsAmount;
             boss_current_health = game_config?.currentBoss?.currentHealth;
-            await sleep(3);
+            await sleep(_.random(10, 25));
           } else {
             break;
           }
@@ -607,10 +618,14 @@ class NonSessionTapper {
           _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
           _.lte(tap_count, 10)
         ) {
-          logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 20 seconds before tapping...`
+          const tap_sleep = _.add(
+            sleep.generateDelays(10)[_.random(0, 9)],
+            _.random(11, 30)
           );
-          await sleep(20);
+          logger.info(
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${tap_sleep} seconds before tapping...`
+          );
+          await sleep(tap_sleep);
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
             if (
@@ -621,7 +636,7 @@ class NonSessionTapper {
               game_config = new_boss;
               balance = game_config?.coinsAmount;
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(3);
+              await sleep(_.random(15, 25));
             } else {
               break;
             }
@@ -701,7 +716,7 @@ class NonSessionTapper {
             logger.info(
               `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 5 seconds before applying energy boost...`
             );
-            await sleep(5);
+            await sleep(_.random(5, 10));
             const apply_energy = await this.api.apply_boost(
               http_client,
               FreeBoostType.ENERGY
@@ -727,60 +742,86 @@ class NonSessionTapper {
         }
 
         //tasks
-        const campaigns = await this.api.get_campaigns(http_client);
+        if (settings.AUTO_COMPLETE_TASKS) {
+          const campaigns = await this.api.get_campaigns(http_client);
 
-        if (!_.isEmpty(campaigns)) {
-          for (const campaign of campaigns) {
-            const get_tasks_list = await this.api.get_tasks_list(
-              http_client,
-              campaign?.id
-            );
+          if (!_.isEmpty(campaigns)) {
+            for (const campaign of campaigns) {
+              const get_tasks_list = await this.api.get_tasks_list(
+                http_client,
+                campaign?.id
+              );
 
-            if (!_.isEmpty(get_tasks_list)) {
-              for (const task of get_tasks_list) {
-                if (task?.status?.toLowerCase() !== "verification") {
-                  await this.api.verify_campaign(http_client, task?.id);
-                }
+              const campaign_sleep = _.add(
+                sleep.generateDelays(campaigns.length + 1)[
+                  _.random(0, campaigns.length - 1)
+                ],
+                _.random(20, 30)
+              );
+              logger.info(
+                `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${campaign_sleep} seconds before getting tasks...`
+              );
 
-                await sleep(2);
+              await sleep(campaign_sleep);
 
-                const get_task_by_id = await this.api.get_task_by_id(
-                  http_client,
-                  task?.id
-                );
-
-                if (!_.isEmpty(get_task_by_id)) {
-                  const task_available_at = moment(
-                    get_task_by_id?.verificationAvailableAt
-                  ).diff(moment(), "seconds");
-                  const sleep_time_task =
-                    task_available_at > 0 ? task_available_at + 5 : 10;
-
+              if (!_.isEmpty(get_tasks_list)) {
+                for (const task of get_tasks_list) {
+                  if (task?.status?.toLowerCase() !== "verification") {
+                    await sleep(_.random(5, 15));
+                    await this.api.verify_campaign(http_client, task?.id);
+                  }
+                  const tasks_sleep = _.add(
+                    sleep.generateDelays(get_tasks_list.length + 1)[
+                      _.random(0, get_tasks_list.length - 1)
+                    ],
+                    _.random(10, 30)
+                  );
                   logger.info(
-                    `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${sleep_time_task} seconds before claiming task...`
+                    `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${campaign_sleep} seconds before verifying task...`
                   );
 
-                  await sleep(sleep_time_task);
+                  await sleep(tasks_sleep);
 
-                  const claim_task = await this.api.complete_task(
+                  const get_task_by_id = await this.api.get_task_by_id(
                     http_client,
-                    get_task_by_id?.userTaskId
+                    task?.id
                   );
 
-                  if (!_.isEmpty(claim_task)) {
-                    logger.success(
-                      `<ye>[${this.bot_name}]</ye> | ${
-                        this.session_name
-                      } | Task claimed: <la>${
-                        claim_task?.name
-                      }</la> | Reward: <bl>${
-                        claim_task?.coinsRewardAmount
-                      }</bl> ${
-                        claim_task?.spinEnergyRewardAmount > 0
-                          ? `(<lb>+${claim_task?.spinEnergyRewardAmount} spin</lb>`
-                          : ""
-                      } )`
+                  if (!_.isEmpty(get_task_by_id)) {
+                    const task_available_at = moment(
+                      get_task_by_id?.verificationAvailableAt
+                    ).diff(moment(), "seconds");
+                    const sleep_time_task =
+                      task_available_at > 0
+                        ? task_available_at + 5
+                        : _.random(5, 15);
+
+                    logger.info(
+                      `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${sleep_time_task} seconds before claiming task...`
                     );
+
+                    await sleep(sleep_time_task);
+
+                    const claim_task = await this.api.complete_task(
+                      http_client,
+                      get_task_by_id?.userTaskId
+                    );
+
+                    if (!_.isEmpty(claim_task)) {
+                      logger.success(
+                        `<ye>[${this.bot_name}]</ye> | ${
+                          this.session_name
+                        } | Task claimed: <la>${
+                          claim_task?.name
+                        }</la> | Reward: <bl>${
+                          claim_task?.coinsRewardAmount
+                        }</bl> ${
+                          claim_task?.spinEnergyRewardAmount > 0
+                            ? `(<lb>+${claim_task?.spinEnergyRewardAmount} spin</lb>`
+                            : ""
+                        } )`
+                      );
+                    }
                   }
                 }
               }
@@ -813,7 +854,7 @@ class NonSessionTapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(5, 15));
         }
 
         if (
@@ -841,7 +882,7 @@ class NonSessionTapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(5, 15));
         }
 
         if (
@@ -869,7 +910,7 @@ class NonSessionTapper {
               ).toLocaleString()}</vo>`
             );
           }
-          await sleep(3);
+          await sleep(_.random(5, 15));
         }
       } catch (error) {
         logger.error(

@@ -4,6 +4,7 @@ const graphqlData = require("../utils/graphqlData");
 const { firstElement } = require("../utils/helper");
 const logger = require("../utils/logger");
 const _ = require("lodash");
+const sleep = require("../utils/sleep");
 
 class ApiRequest {
   constructor(session_name, bot_name) {
@@ -30,6 +31,18 @@ class ApiRequest {
       }
       return data?.data?.telegramUserLogin;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting access token. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.get_access_token(http_client, request_data); // Retry the request
+      }
+
+      // Handle 5xx server errors
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting access token (${error?.message})`
@@ -66,6 +79,16 @@ class ApiRequest {
       }
       return true;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while validating query id. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.validate_query_id(http_client, request_data); // Retry the request
+      }
       throw error;
     }
   }
@@ -89,6 +112,17 @@ class ApiRequest {
       }
       return data?.data?.telegramUserMe;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting profile data. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.profile_data(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting profile data (${error?.message})`
@@ -128,6 +162,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameGetConfig;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting game data. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.game_data(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting game data (${error?.message})`
@@ -167,6 +212,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameTapbotGetConfig;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting tapbot config. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.tapbot_config(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting tapbot config (${error?.message})`
@@ -206,6 +262,17 @@ class ApiRequest {
       }
       return data?.data?.slotMachineSpinV2;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while spinning slot machine. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.spin_slot_machine(http_client, spinsCount); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while spinning slot machine (${error?.message})`
@@ -245,6 +312,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGamePurchaseUpgrade;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while upgrading boost. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.upgrade_boost(http_client, upgradeType); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while upgrading boost (${error?.message})`
@@ -284,6 +362,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameTapbotStart;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while starting tapbot. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.start_tapbot(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while starting tapbot (${error?.message})`
@@ -323,6 +412,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameTapbotClaimCoins;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while claiming tapbot. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.claim_tapbot(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while claiming tapbot (${error?.message})`
@@ -362,6 +462,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameActivateBooster;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while applying boost. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.apply_boost(http_client, boosterType); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while applying boost (${error?.message})`
@@ -401,6 +512,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameProcessTapsBatch;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while sending taps. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.send_taps(http_client, request_data); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while sending taps (${error?.message})`
@@ -440,6 +562,17 @@ class ApiRequest {
       }
       return data?.data?.telegramGameSetNextBoss;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while setting next boss. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.set_next_boss(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while setting next boss (${error?.message})`
@@ -481,6 +614,17 @@ class ApiRequest {
         item?.description?.toLowerCase()?.includes("youtube")
       );
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting campaigns. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.get_campaigns(http_client); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting campaigns (${error?.message})`
@@ -520,6 +664,17 @@ class ApiRequest {
       }
       return data?.data?.campaignTasks;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting tasks. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.get_tasks_list(http_client, campaignId); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting tasks (${error?.message})`
@@ -559,6 +714,17 @@ class ApiRequest {
       }
       return data?.data?.campaignTaskMoveToVerificationV2;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while verifying task. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.verify_campaign(http_client, taskConfigId); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while verifying task (${error?.message})`
@@ -598,6 +764,17 @@ class ApiRequest {
       }
       return data?.data?.campaignTaskGetConfig;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting task by id. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.get_task_by_id(http_client, taskId); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while getting task by id (${error?.message})`
@@ -637,6 +814,17 @@ class ApiRequest {
       }
       return data?.data?.campaignTaskMarkAsCompleted;
     } catch (error) {
+      // Handle 429 Too Many Requests
+      if (error?.response?.status === 429) {
+        const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
+        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        logger.warning(
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while completing task. Retrying after ${retryAfter} seconds.`
+        );
+        await sleep(retryAfter); // Wait for the specified time
+        return this.complete_task(http_client, userTaskId); // Retry the request
+      }
+
       if (error?.response?.status >= 500 && error?.response?.status <= 599) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Server error while completing task (${error?.message})`

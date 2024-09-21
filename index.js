@@ -5,6 +5,7 @@ const banner = require("./bot/utils/banner");
 const logger = require("./bot/utils/logger");
 const luncher = require("./bot/utils/luncher");
 const path = require("path");
+const sleep = require("./bot/utils/sleep");
 
 const main = async () => {
   const nodeVersion = process.version;
@@ -22,19 +23,23 @@ const main = async () => {
     await luncher.process();
   } else {
     console.log(banner);
-    let tasks = [];
     const getProxies = settings.USE_PROXY_FROM_FILE ? proxies : null;
     let proxiesCycle = getProxies ? getProxies[Symbol.iterator]() : null;
     const query_ids = require(path.join(process.cwd(), "queryIds.json"));
-
-    for (const [query_name, query_id] of Object.entries(query_ids)) {
+    const queries = Object.entries(query_ids);
+    const tasks = queries?.map(async ([query_name, query_id], index) => {
       const proxy = proxiesCycle ? proxiesCycle.next().value : null;
       try {
-        tasks.push(new NonSessionTapper(query_id, query_name).run(proxy));
+        const sleeping = sleep.generateDelays(queries.length + 1)[index];
+        logger.info(
+          `<ye>[memefi]</ye> | ${query_name} | Sleeping ${sleeping} seconds before starting the bot`
+        );
+        await sleep(sleeping);
+        new NonSessionTapper(query_id, query_name).run(proxy);
       } catch (error) {
         logger.error(`Error in task for tg_client: ${error.message}`);
       }
-    }
+    });
 
     await Promise.all(tasks);
   }
