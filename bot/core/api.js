@@ -34,7 +34,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting access token. Retrying after ${retryAfter} seconds.`
         );
@@ -82,7 +85,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while validating query id. Retrying after ${retryAfter} seconds.`
         );
@@ -115,7 +121,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting profile data. Retrying after ${retryAfter} seconds.`
         );
@@ -165,7 +174,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting game data. Retrying after ${retryAfter} seconds.`
         );
@@ -215,7 +227,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting tapbot config. Retrying after ${retryAfter} seconds.`
         );
@@ -265,7 +280,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while spinning slot machine. Retrying after ${retryAfter} seconds.`
         );
@@ -315,7 +333,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while upgrading boost. Retrying after ${retryAfter} seconds.`
         );
@@ -365,7 +386,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while starting tapbot. Retrying after ${retryAfter} seconds.`
         );
@@ -415,7 +439,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while claiming tapbot. Retrying after ${retryAfter} seconds.`
         );
@@ -465,7 +492,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while applying boost. Retrying after ${retryAfter} seconds.`
         );
@@ -515,7 +545,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while sending taps. Retrying after ${retryAfter} seconds.`
         );
@@ -565,7 +598,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while setting next boss. Retrying after ${retryAfter} seconds.`
         );
@@ -617,7 +653,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting campaigns. Retrying after ${retryAfter} seconds.`
         );
@@ -667,7 +706,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting tasks. Retrying after ${retryAfter} seconds.`
         );
@@ -717,7 +759,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while verifying task. Retrying after ${retryAfter} seconds.`
         );
@@ -767,7 +812,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting task by id. Retrying after ${retryAfter} seconds.`
         );
@@ -817,7 +865,10 @@ class ApiRequest {
       // Handle 429 Too Many Requests
       if (error?.response?.status === 429) {
         const retryAfter__ = error?.response?.headers["retry-after"] || 10; // Default to 5 seconds if not specified
-        const retryAfter = _.toInteger(retryAfter__) + _.random(1, 5);
+        const retryAfter =
+          _.toInteger(retryAfter__) > 300
+            ? 300
+            : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while completing task. Retrying after ${retryAfter} seconds.`
         );
