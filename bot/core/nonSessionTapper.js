@@ -66,7 +66,15 @@ class NonSessionTapper {
     try {
       const data = parser.toJson(this.query_id);
       const platform = this.#get_platform(this.#get_user_agent());
-
+      if (
+        _.isUndefined(data?.user?.username) ||
+        _.isNull(data?.user?.username)
+      ) {
+        logger.paragraph(
+          `Set username for session name <la>${this.session_name}</la> before running the bot and follow the below steps after you are done setting the username:\n1. Delete the cache folder\n2. Restart the bot`
+        );
+        process.exit(1);
+      }
       return {
         webAppData: {
           auth_date: Number(data?.auth_date),
