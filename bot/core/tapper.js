@@ -109,7 +109,7 @@ class Tapper {
             _.isNull(data?.user?.username)
           ) {
             logger.paragraph(
-              `Set username for session name <la>${this.session_name}</la> before running the bot and follow the below steps after you are done setting the username:\n1. Delete the cache folder\n2. Restart the bot`
+              `Set username for session name <la>${this.session_name}</la> in telegram \nbefore running the bot and follow the below steps after you are done setting the username:\n\n1. Delete the cache folder\n2. Restart the bot`
             );
             process.exit(1);
           }
