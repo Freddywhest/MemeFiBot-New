@@ -19,30 +19,7 @@ const main = async () => {
         "</bl>"
     );
   }
-  if (settings.USE_QUERY_ID === false) {
-    await luncher.process();
-  } else {
-    console.log(banner);
-    const getProxies = settings.USE_PROXY_FROM_FILE ? proxies : null;
-    let proxiesCycle = getProxies ? getProxies[Symbol.iterator]() : null;
-    const query_ids = require(path.join(process.cwd(), "queryIds.json"));
-    const queries = Object.entries(query_ids);
-    const tasks = queries?.map(async ([query_name, query_id], index) => {
-      const proxy = proxiesCycle ? proxiesCycle.next().value : null;
-      try {
-        const sleeping = sleep.generateDelays(queries.length + 1)[index];
-        logger.info(
-          `<ye>[memefi]</ye> | ${query_name} | Sleeping ${sleeping} seconds before starting the bot`
-        );
-        await sleep(sleeping);
-        new NonSessionTapper(query_id, query_name).run(proxy);
-      } catch (error) {
-        logger.error(`Error in task for tg_client: ${error.message}`);
-      }
-    });
-
-    await Promise.all(tasks);
-  }
+  await luncher.process();
 };
 
 // Wrap main function execution in an async context to handle asynchronous operations

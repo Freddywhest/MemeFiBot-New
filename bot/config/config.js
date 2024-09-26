@@ -78,10 +78,31 @@ const settings = {
       : process.env.SLEEP_BETWEEN_REQUESTS &&
         /^\d+$/.test(process.env.SLEEP_BETWEEN_REQUESTS)
       ? parseInt(process.env.SLEEP_BETWEEN_REQUESTS)
-      : 150,
+      : [1000, 2000],
 
-  USE_PROXY_FROM_FILE: process.env.USE_PROXY_FROM_FILE
-    ? process.env.USE_PROXY_FROM_FILE.toLowerCase() === "true"
+  DELAY_BETWEEN_STARTING_BOT:
+    process.env.DELAY_BETWEEN_STARTING_BOT &&
+    _isArray(process.env.DELAY_BETWEEN_STARTING_BOT)
+      ? JSON.parse(process.env.DELAY_BETWEEN_STARTING_BOT)
+      : [10, 50],
+
+  DELAY_BETWEEN_TURBO:
+    process.env.DELAY_BETWEEN_TURBO && _isArray(process.env.DELAY_BETWEEN_TURBO)
+      ? JSON.parse(process.env.DELAY_BETWEEN_TURBO)
+      : [10, 50],
+
+  DELAY_BETWEEN_TAPS:
+    process.env.DELAY_BETWEEN_TAPS && _isArray(process.env.DELAY_BETWEEN_TAPS)
+      ? JSON.parse(process.env.DELAY_BETWEEN_TAPS)
+      : [10, 50],
+
+  DELAY_BETWEEN_TASKS:
+    process.env.DELAY_BETWEEN_TASKS && _isArray(process.env.DELAY_BETWEEN_TASKS)
+      ? JSON.parse(process.env.DELAY_BETWEEN_TASKS)
+      : [10, 50],
+
+  USE_PROXY_FROM_JS_FILE: process.env.USE_PROXY_FROM_JS_FILE
+    ? process.env.USE_PROXY_FROM_JS_FILE.toLowerCase() === "true"
     : false,
 
   USE_REGISTRATION_PROXY: process.env.USE_REGISTRATION_PROXY
@@ -90,6 +111,10 @@ const settings = {
 
   USE_QUERY_ID: process.env.USE_QUERY_ID
     ? process.env.USE_QUERY_ID.toLowerCase() === "true"
+    : false,
+
+  USE_PROXY_FROM_TXT_FILE: process.env.USE_PROXY_FROM_TXT_FILE
+    ? process.env.USE_PROXY_FROM_TXT_FILE.toLowerCase() === "true"
     : false,
 };
 

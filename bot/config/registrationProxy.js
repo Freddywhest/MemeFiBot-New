@@ -7,3 +7,5 @@ const registrationProxies =
     username: "username", // If use Socks with auth then you need to provide a username.
     password: "password", // If use Socks with auth then you need to provide a password.
   };
+
+module.exports = registrationProxies;

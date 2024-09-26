@@ -12,6 +12,7 @@ const { select } = require("@inquirer/prompts");
 var qrcode = require("qrcode-terminal");
 const readline = require("readline");
 const os = require("os");
+const registrationProxies = require("../config/registrationProxy");
 
 class Register {
   #stringSession;

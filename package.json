@@ -1,9 +1,12 @@
 {
   "name": "memefibot",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-action1": "node index.js --action=1",
+    "start-action2": "node index.js --action=2",
+    "start-action3": "node index.js --action=3"
   },
   "keywords": [],
   "author": "",

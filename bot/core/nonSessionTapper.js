@@ -64,42 +64,25 @@ class NonSessionTapper {
 
   async #get_tg_web_data() {
     try {
-      const data = parser.toJson(this.query_id);
+      const data = parser.toJson(decodeURIComponent(this.query_id));
       const platform = this.#get_platform(this.#get_user_agent());
       if (
         _.isUndefined(data?.user?.username) ||
         _.isNull(data?.user?.username)
       ) {
         logger.paragraph(
-          `Set username for session name <la>${this.session_name}</la> before running the bot and follow the below steps after you are done setting the username:\n1. Delete the cache folder\n2. Restart the bot`
+          `Set username for query id name <la>${this.session_name}</la> before running the bot and \nfollow the below steps after you are done setting the username:\n\n1. Delete the cache folder\n2. Restart the bot`
         );
         process.exit(1);
       }
+      const userString = JSON.stringify(data?.user);
       return {
         webAppData: {
           auth_date: Number(data?.auth_date),
           hash: data?.hash,
           query_id: data?.query_id,
-          checkDataString: `auth_date=${Number(data?.auth_date)}\nquery_id=${
-            data?.query_id
-          }\nuser={\"id\":${Number(data?.user?.id)},\"first_name\":\"${
-            data?.user?.first_name
-          }\",\"last_name\":\"${data?.user?.last_name}\",\"username\":\"${
-            data?.user?.username
-          }\",\"language_code\":\"${
-            data?.user?.language_code
-          }\",\"allows_write_to_pm\":${data?.user?.allows_write_to_pm}}`,
-
-          user: {
-            id: Number(data?.user?.id),
-            allows_write_to_pm: data?.user?.allows_write_to_pm,
-            first_name: data?.user?.first_name,
-            last_name: data?.user?.last_name,
-            username: data?.user?.username,
-            language_code: data?.user?.language_code,
-            version: "7.6",
-            platform,
-          },
+          checkDataString: `auth_date=${data.auth_date}\nquery_id=${data.query_id}\nuser=${userString}`,
+          user: { ...data?.user, version: "7.6", platform },
         },
       };
     } catch (error) {
@@ -185,7 +168,10 @@ class NonSessionTapper {
     let game_config;
     let tapbot_config;
 
-    if (settings.USE_PROXY_FROM_FILE && proxy) {
+    if (
+      (settings.USE_PROXY_FROM_TXT_FILE || settings.USE_PROXY_FROM_JS_FILE) &&
+      proxy
+    ) {
       http_client = fdy.create({
         headers: this.headers,
         proxy,
@@ -488,9 +474,9 @@ class NonSessionTapper {
           _.lte(turbo_apply_count, 5) &&
           settings.AUTO_APPLY_TURBO
         ) {
-          const turbo_sleep = _.add(
-            sleep.generateDelays(10)[_.random(0, 9)],
-            _.random(12, 30)
+          const turbo_sleep = _.random(
+            settings.DELAY_BETWEEN_TURBO[0],
+            settings.DELAY_BETWEEN_TURBO[1]
           );
           logger.info(
             `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping ${turbo_sleep} seconds before applying turbo boost...`
@@ -581,17 +567,29 @@ class NonSessionTapper {
               balance = game_config?.coinsAmount;
               const added_coins = _.subtract(balance, old_balance);
               boss_current_health = game_config?.currentBoss?.currentHealth;
-              logger.success(
-                `<ye>[${this.bot_name}]</ye> | ${
-                  this.session_name
-                } | 🔨 Successful tapped | Balance: <pi>${Number(
-                  balance
-                ).toLocaleString()}</pi> (<gr>+${Number(
-                  added_coins
-                ).toLocaleString()}</gr>) | Boss health: <vo>${Number(
-                  boss_current_health
-                ).toLocaleString()}</vo>`
-              );
+              if (_.gt(added_coins, 0)) {
+                logger.success(
+                  `<ye>[${this.bot_name}]</ye> | ${
+                    this.session_name
+                  } | 🔨 Successful tapped | Balance: <pi>${Number(
+                    balance
+                  ).toLocaleString()}</pi> (<gr>+${Number(
+                    added_coins
+                  ).toLocaleString()}</gr>) | Boss health: <vo>${Number(
+                    boss_current_health
+                  ).toLocaleString()}</vo>`
+                );
+              } else {
+                logger.success(
+                  `<ye>[${this.bot_name}]</ye> | ${
+                    this.session_name
+                  } | 🔨 Successful tapped | Balance: <pi>${Number(
+                    balance
+                  ).toLocaleString()}</pi> | Boss health: <vo>${Number(
+                    boss_current_health
+                  ).toLocaleString()}</vo>`
+                );
+              }
             }
           } else {
             break;
@@ -626,9 +624,9 @@ class NonSessionTapper {
           _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
           _.lte(tap_count, 10)
         ) {
-          const tap_sleep = _.add(
-            sleep.generateDelays(10)[_.random(0, 9)],
-            _.random(11, 30)
+          const tap_sleep = _.random(
+            settings.DELAY_BETWEEN_TAPS[0],
+            settings.DELAY_BETWEEN_TAPS[1]
           );
           logger.info(
             `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${tap_sleep} seconds before tapping...`
@@ -749,22 +747,24 @@ class NonSessionTapper {
           tap_count++;
         }
 
+        let task_count = 0;
         //tasks
         if (settings.AUTO_COMPLETE_TASKS) {
           const campaigns = await this.api.get_campaigns(http_client);
 
           if (!_.isEmpty(campaigns)) {
             for (const campaign of campaigns) {
+              if (_.gte(task_count, 10)) {
+                break;
+              }
               const get_tasks_list = await this.api.get_tasks_list(
                 http_client,
                 campaign?.id
               );
 
-              const campaign_sleep = _.add(
-                sleep.generateDelays(campaigns.length + 1)[
-                  _.random(0, campaigns.length - 1)
-                ],
-                _.random(20, 30)
+              const campaign_sleep = _.random(
+                settings.DELAY_BETWEEN_TASKS[0],
+                settings.DELAY_BETWEEN_TASKS[1]
               );
               logger.info(
                 `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${campaign_sleep} seconds before getting tasks...`
@@ -833,6 +833,7 @@ class NonSessionTapper {
                   }
                 }
               }
+              task_count++;
             }
           }
         }

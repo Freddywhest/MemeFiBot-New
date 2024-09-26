@@ -40,14 +40,18 @@
 | **AUTO_APPLY_ENERGY**           | Whether to use the daily free turbo boost (True / False)                                                        |
 | **RANDOM_TAPS**                 | Random number of taps (eg [50,200])                                                                             |
 | **RANDOM_TURBO_TAPS**           | Random number of turbo taps (eg [50,200])                                                                       |
-| **SLEEP_BETWEEN_REQUESTS**      | Random delay between taps in seconds (eg [10,26])                                                               |
+| **SLEEP_BETWEEN_REQUESTS**      | Random delay between requests in seconds (eg [10,26])                                                           |
+| **DELAY_BETWEEN_TURBO**         | Random delay between turbo taps in seconds (eg [10,26])                                                         |
+| **DELAY_BETWEEN_TAPS**          | Random delay between taps in seconds (eg [10,26])                                                               |
+| **DELAY_BETWEEN_TASKS**         | Random delay between tasks in seconds (eg [10,26])                                                              |
+| **DELAY_BETWEEN_STARTING_BOT**  | Random delay between starting bot (eg [10,26])                                                                  |
 | **AUTO_BUY_TAPBOT**             | Whether to purchase tapbot automatically (True / False)                                                         |
 | **AUTO_SPIN**                   | Whether to spin automatically (True / False)                                                                    |
 | **AUTO_COMPLETE_TASKS**         | Whether to should claim tasks (True / False)                                                                    |
 | **AUTO_CLAIM_AND_START_TAPBOT** | Whether the bot should to claim and start tapbot (True / False)                                                 |
-| **USE_PROXY_FROM_FILE**         | Whether to use proxy from the `bot/config/proxies.js` file (True / False)                                       |
+| **USE_PROXY_FROM_JS_FILE**      | Whether to use proxy from the `bot/config/proxies.js` file (True / False)                                       |
+| **USE_PROXY_FROM_TXT_FILE**     | Whether to use proxy from the `bot/config/proxies.txt` file (True / False)                                      |
 | **USE_REGISTRATION_PROXY**      | Whether to use proxy from the `bot/config/registrationProxy.js` file when creating a new session (True / False) |
-| **USE_QUERY_ID**                | Whether to query_id instead of sessions (True / False)                                                          |
 
 ## Installation
 
@@ -87,7 +91,10 @@ Also for quick launch you can use arguments, for example:
 
 OR
 
-~/MemeFiBot-New >>> node index.js --action=2
+~/MemeFiBot-New >>> node index.js --action=2 # For session
+OR
+
+~/MemeFiBot-New >>> node index.js --action=3 # For query id
 
 #1 - Create session
 #2 - Run clicker

@@ -23,6 +23,7 @@ class ApiRequest {
         })
       );
       const data = firstElement(response?.data);
+
       if (!_.isEmpty(data?.errors)) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Error while getting access token (${data?.errors[0]?.message})`
@@ -39,7 +40,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting access token. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.get_access_token(http_client, request_data); // Retry the request
@@ -90,7 +91,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while validating query id. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[Validating query id]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.validate_query_id(http_client, request_data); // Retry the request
@@ -126,7 +127,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting profile data. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual <ye>[getting profile data]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.profile_data(http_client); // Retry the request
@@ -179,7 +180,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting game data. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[getting game data]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.game_data(http_client); // Retry the request
@@ -232,7 +233,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting tapbot config. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[getting turbo config]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.tapbot_config(http_client); // Retry the request
@@ -285,7 +286,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while spinning slot machine. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[spinning slot machine]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.spin_slot_machine(http_client, spinsCount); // Retry the request
@@ -338,7 +339,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while upgrading boost. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[upgrading boost]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.upgrade_boost(http_client, upgradeType); // Retry the request
@@ -391,7 +392,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while starting tapbot. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[starting tapbot]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.start_tapbot(http_client); // Retry the request
@@ -444,7 +445,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while claiming tapbot. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[claiming tapbot]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.claim_tapbot(http_client); // Retry the request
@@ -497,7 +498,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while applying boost. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[applying boost]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.apply_boost(http_client, boosterType); // Retry the request
@@ -550,7 +551,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while sending taps. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[sending taps]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.send_taps(http_client, request_data); // Retry the request
@@ -603,7 +604,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while setting next boss. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[setting next boss]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.set_next_boss(http_client); // Retry the request
@@ -658,7 +659,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting campaigns. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[getting campaigns]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.get_campaigns(http_client); // Retry the request
@@ -711,7 +712,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting tasks. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[getting tasks]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.get_tasks_list(http_client, campaignId); // Retry the request
@@ -764,7 +765,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while verifying task. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[verifying campaign]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.verify_campaign(http_client, taskConfigId); // Retry the request
@@ -817,7 +818,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while getting task by id. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[getting task by id]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.get_task_by_id(http_client, taskId); // Retry the request
@@ -870,7 +871,7 @@ class ApiRequest {
             ? 300
             : _.toInteger(retryAfter__) + _.random(1, 5);
         logger.warning(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⚠️ Rate limit exceeded while completing task. Retrying after ${retryAfter} seconds.`
+          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ⏳ Processing request is taking a little longer than usual - <ye>[completing task by id]</ye>. Retrying in ${retryAfter} seconds.`
         );
         await sleep(retryAfter); // Wait for the specified time
         return this.complete_task(http_client, userTaskId); // Retry the request
