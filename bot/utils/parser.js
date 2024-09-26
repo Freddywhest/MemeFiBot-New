@@ -2,8 +2,12 @@ const logger = require("./logger");
 
 class Parser {
   #parseQueryString(queryString) {
+    let queryStringg = queryString;
+    if (!queryString?.includes("=")) {
+      queryStringg = decodeURIComponent(queryString);
+    }
     let queryParams = {};
-    let pairs = queryString.split("&");
+    let pairs = queryStringg.split("&");
 
     pairs.forEach((pair) => {
       let [key, value] = pair.split("=");

@@ -64,7 +64,7 @@ class NonSessionTapper {
 
   async #get_tg_web_data() {
     try {
-      const data = parser.toJson(decodeURIComponent(this.query_id));
+      const data = parser.toJson(this.query_id);
       const platform = this.#get_platform(this.#get_user_agent());
       if (
         _.isUndefined(data?.user?.username) ||
