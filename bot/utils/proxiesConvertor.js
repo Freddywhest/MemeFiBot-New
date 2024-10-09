@@ -5,11 +5,11 @@ const fs = require("fs");
 function proxiesConvertor(proxyStrings) {
   return proxyStrings.map((proxyString) => {
     const regex =
-      /^(\w+):\/\/(?:(\w+):(\w+)@)?([\d.]+):(\d+)(?::(\w+):(\w+))?$/;
-    const alternateRegex = /^(\w+):\/\/([\d.]+):(\d+)(?:@(\w+):(\w+))?$/;
-    const secregex = /^(\w+):\/\/(\w+):(\w+):([\d.]+):(\d+)$/;
-    // Regex to handle user:pass@ip:port or user:pass:ip:port
-    const otherRegex = /^(\w+):\/\/(?:(\w+):(\w+)@)?([\d.]+):(\d+)$/;
+      /^(\w+):\/\/(?:(\w+):(\w+)@)?([a-zA-Z\d.-]+):(\d+)(?::(\w+):(\w+))?$/;
+    const alternateRegex = /^(\w+):\/\/([a-zA-Z\d.-]+):(\d+)(?:@(\w+):(\w+))?$/;
+    const secregex = /^(\w+):\/\/(\w+):(\w+):([a-zA-Z\d.-]+):(\d+)$/;
+    // Regex to handle user:pass@hostname:port or user:pass:hostname:port
+    const otherRegex = /^(\w+):\/\/(?:(\w+):(\w+)@)?([a-zA-Z\d.-]+):(\d+)$/;
 
     let match = proxyString.match(regex);
     let altMatch = proxyString.match(alternateRegex);
@@ -46,8 +46,6 @@ function proxiesConvertor(proxyStrings) {
       };
     } else if (secrematch) {
       // For format: type://user:pass:ip:port
-      console.log(secregex);
-
       const [, protocol, username, password, ip, port] = secrematch;
       return {
         ip,
