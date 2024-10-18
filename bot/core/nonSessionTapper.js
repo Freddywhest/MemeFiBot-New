@@ -92,8 +92,8 @@ class NonSessionTapper {
 
   async #check_proxy(http_client, proxy) {
     try {
-      const response = await http_client.get("https://httpbin.org/ip");
-      const ip = response.data.origin;
+      const response = await http_client.get("http://ip-api.com/json?fields=query");
+      const ip = response.data.query;
       logger.info(
         `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Proxy IP: ${ip}`
       );

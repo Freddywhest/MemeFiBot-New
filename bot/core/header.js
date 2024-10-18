@@ -1,20 +1,20 @@
 const app = require("../config/app");
 
 const headers = {
-  "content-type": "application/json",
-  accept: "*/*",
-  "sec-fetch-site": "same-site",
-  "accept-encoding": "gzip, deflate",
-  "accept-language": "en-US,en;q=0.9",
-  "sec-fetch-mode": "cors",
-  "sec-ch-ua-mobile": "?1",
-  origin: app.origin,
-  "user-agent":
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
-  "sec-fetch-dest": "empty",
-  "x-requested-with": "org.telegram.messenger.web",
-  priority: "u=1, i",
-  referer: "https://tg-app.memefi.club/",
+    accept: "*/*",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Content-Type": "application/json",
+    origin: app.origin,
+    referer: app.referer,
+    "Sec-Ch-Ua": '"Chromium";v="128", "Not;A=Brand";v="24", "Android WebView";v="128"',
+    "Sec-Ch-Ua-Mobile": "?1",
+    "Sec-Ch-Ua-Platform": '"Android"',
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 13; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.146 Mobile Safari/537.36",
+    'X-Requested-With': 'org.telegram.messenger'
 };
 
 module.exports = headers;

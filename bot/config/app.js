@@ -4,7 +4,7 @@ const app = {
   peer: "memefi_coin_bot",
   bot: "memefi_coin_bot",
   webviewUrl: "https://tg-app.memefi.club",
-  origin: "https://tg-app.memefi.club/",
+  origin: "https://tg-app.memefi.club",
   referer: "https://tg-app.memefi.club/",
 };
 
