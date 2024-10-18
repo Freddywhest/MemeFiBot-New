@@ -1,11 +1,8 @@
-const settings = require("./bot/config/config");
-const proxies = require("./bot/config/proxies");
-const NonSessionTapper = require("./bot/core/nonSessionTapper");
-const banner = require("./bot/utils/banner");
 const logger = require("./bot/utils/logger");
 const luncher = require("./bot/utils/luncher");
-const path = require("path");
-const sleep = require("./bot/utils/sleep");
+const { version, name } = require("./package.json");
+const _ = require("lodash");
+const _fdy = require("fdy-scraping");
 
 const main = async () => {
   const nodeVersion = process.version;
@@ -25,8 +22,20 @@ const main = async () => {
 // Wrap main function execution in an async context to handle asynchronous operations
 (async () => {
   try {
+    const latestVersion = await _fdy.get(
+      "https://raw.githubusercontent.com/Freddywhest/MemeFiBot-New/refs/heads/main/package.json"
+    );
+    if (!_.isEqual(latestVersion.data.version, version)) {
+      logger.versionWarning(
+        `You are using version <bl>${version}</bl> of the ${name} bot, while the latest version is <lb>${latestVersion.data.version}</lb>. Please update the bot.\n\n`
+      );
+      process.exit(1);
+    }
     await main();
   } catch (error) {
     throw error;
   }
 })();
+/* 
+https://raw.githubusercontent.com/Freddywhest/WuykzEas0LDTwIhjYNYES5v7yZcQcK0B/refs/heads/main/iXcwT1vfYWUm7iZwCc3DJ4q9R71BBjy5jbYBQkSEnyYy6.json
+*/

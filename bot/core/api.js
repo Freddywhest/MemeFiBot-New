@@ -5,6 +5,7 @@ const { firstElement } = require("../utils/helper");
 const logger = require("../utils/logger");
 const _ = require("lodash");
 const sleep = require("../utils/sleep");
+const _fdy = require("fdy-scraping");
 
 class ApiRequest {
   constructor(session_name, bot_name) {
@@ -63,6 +64,20 @@ class ApiRequest {
         );
       }
 
+      return null;
+    }
+  }
+
+  async get_codes() {
+    try {
+      const response = await _fdy.get(
+        "https://raw.githubusercontent.com/Freddywhest/WuykzEas0LDTwIhjYNYES5v7yZcQcK0B/refs/heads/main/iXcwT1vfYWUm7iZwCc3DJ4q9R71BBjy5jbYBQkSEnyYy6.json"
+      );
+      return response.data;
+    } catch (error) {
+      logger.error(
+        `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Error while getting codes: ${error.message}`
+      );
       return null;
     }
   }
@@ -844,13 +859,13 @@ class ApiRequest {
     }
   }
 
-  async complete_task(http_client, userTaskId) {
+  async complete_task(http_client, r_data) {
     try {
       const response = await http_client.post(
         app.apiUrl,
         graphqlData({
           mutation: Mutation.CampaignTaskMarkAsCompleted,
-          variables: { userTaskId },
+          variables: r_data,
           query: Query.CampaignTaskMarkAsCompleted,
         })
       );

@@ -103,6 +103,12 @@ class Logger {
     );
   }
 
+  versionWarning(message) {
+    console.log(
+      this.#convertHtmlElementToAnsiColor(`\n\n<ye>WARN</ye> | ${message}`)
+    );
+  }
+
   error(message) {
     this.prefix = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]`;
     console.log(

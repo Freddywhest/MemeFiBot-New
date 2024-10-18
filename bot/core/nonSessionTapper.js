@@ -787,6 +787,12 @@ class NonSessionTapper {
                   );
 
                   if (!_.isEmpty(get_task_by_id)) {
+                    if (get_task_by_id?.taskVerificationType == "SecretCode") {
+                      logger.info(
+                        `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task requires secret code. Skipping task...`
+                      );
+                      continue;
+                    }
                     const task_available_at = moment(
                       get_task_by_id?.verificationAvailableAt
                     ).diff(moment(), "seconds");
