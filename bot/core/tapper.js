@@ -768,7 +768,7 @@ class Tapper {
         }
 
         //normal tapping
-        let tap_count = 0;
+        /*  let tap_count = 0;
         while (
           _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
           _.lte(tap_count, 10)
@@ -894,7 +894,7 @@ class Tapper {
           }
 
           tap_count++;
-        }
+        } */
 
         let task_count = 0;
         //tasks
@@ -949,9 +949,8 @@ class Tapper {
                   if (!_.isEmpty(get_task_by_id)) {
                     if (get_task_by_id?.taskVerificationType == "SecretCode") {
                       const get_codes = await this.api.get_codes();
-
-                      if (!_.isEmpty(get_codes)) {
-                        const SecretCode = get_codes.filter((code) =>
+                      if (!_.isEmpty(get_codes?.codes)) {
+                        const SecretCode = get_codes.codes.filter((code) =>
                           get_task_by_id?.name.startsWith(code.name)
                         );
                         console.log(SecretCode);
