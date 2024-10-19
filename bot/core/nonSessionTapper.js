@@ -742,6 +742,11 @@ class NonSessionTapper {
         //tasks
         if (settings.AUTO_COMPLETE_TASKS) {
           const campaigns = await this.api.get_campaigns(http_client);
+          if (settings.USE_CODES_FROM_FILE) {
+            get_codes = require("../../codes.json");
+          } else {
+            get_codes = await this.api.get_codes();
+          }
 
           if (!_.isEmpty(campaigns)) {
             for (const campaign of campaigns) {
@@ -788,7 +793,6 @@ class NonSessionTapper {
 
                   if (!_.isEmpty(get_task_by_id)) {
                     if (get_task_by_id?.taskVerificationType == "SecretCode") {
-                      const get_codes = await this.api.get_codes();
                       if (!_.isEmpty(get_codes?.codes)) {
                         const SecretCode = get_codes.codes.filter((code) =>
                           get_task_by_id?.name

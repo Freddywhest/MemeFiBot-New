@@ -116,7 +116,11 @@ const settings = {
   USE_PROXY_FROM_TXT_FILE: process.env.USE_PROXY_FROM_TXT_FILE
     ? process.env.USE_PROXY_FROM_TXT_FILE.toLowerCase() === "true"
     : false,
-    CAN_CREATE_SESSION: false,
+  CAN_CREATE_SESSION: false,
+
+  USE_CODES_FROM_FILE: process.env.USE_CODES_FROM_FILE
+    ? process.env.USE_CODES_FROM_FILE.toLowerCase() === "true"
+    : false,
 };
 
 module.exports = settings;

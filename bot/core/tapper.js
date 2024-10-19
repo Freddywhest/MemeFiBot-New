@@ -897,8 +897,14 @@ class Tapper {
         }
 
         let task_count = 0;
+        let get_codes;
         //tasks
         if (settings.AUTO_COMPLETE_TASKS) {
+          if (settings.USE_CODES_FROM_FILE) {
+            get_codes = require("../../codes.json");
+          } else {
+            get_codes = await this.api.get_codes();
+          }
           const campaigns = await this.api.get_campaigns(http_client);
 
           if (!_.isEmpty(campaigns)) {
@@ -948,7 +954,6 @@ class Tapper {
 
                   if (!_.isEmpty(get_task_by_id)) {
                     if (get_task_by_id?.taskVerificationType == "SecretCode") {
-                      const get_codes = await this.api.get_codes();
                       if (!_.isEmpty(get_codes?.codes)) {
                         const SecretCode = get_codes.codes.filter((code) =>
                           get_task_by_id?.name
