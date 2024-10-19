@@ -138,6 +138,12 @@ class Register {
   }
 
   async start() {
+    if (settings.CAN_CREATE_SESSION == false) {
+      logger.warning(
+        `\n\n<ye>Warning: Creating a new session may log you out of other active sessions \nor may even get your telegram account banned.\nBy proceeding, you acknowledge and accept full responsibility for any consequences.\n\nMake sure you have completed the following before continuing:\n1. Linked an email to your Telegram account\n2. Make sure you are not using a virtual phone number\n3. Have a stable internet connection\n\nIf you still want to continue, go to bot/config/config.js and set CAN_CREATE_SESSION to true.\n</ye>`
+      );
+      process.exit(1);
+    }
     const filePath = path.join(process.cwd(), "sessions");
     if (!this.#apiId || !this.#apiHash) {
       logger.error("API_ID and API_HASH must be provided.");
