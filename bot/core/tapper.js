@@ -768,7 +768,7 @@ class Tapper {
         }
 
         //normal tapping
-         let tap_count = 0;
+        let tap_count = 0;
         while (
           _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
           _.lte(tap_count, 10)
@@ -953,7 +953,13 @@ class Tapper {
                         const SecretCode = get_codes.codes.filter((code) =>
                           get_task_by_id?.name.startsWith(code.name)
                         );
-                        console.log(SecretCode);
+
+                        if (_.isEmpty(SecretCode)) {
+                          logger.info(
+                            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task requires verification code but no codes found. Skipping...`
+                          );
+                          continue;
+                        }
                         r_data = {
                           userTaskId: get_task_by_id?.userTaskId,
                           verificationCode: SecretCode?.code,
