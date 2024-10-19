@@ -768,7 +768,7 @@ class Tapper {
         }
 
         //normal tapping
-        /*  let tap_count = 0;
+         let tap_count = 0;
         while (
           _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
           _.lte(tap_count, 10)
@@ -894,7 +894,7 @@ class Tapper {
           }
 
           tap_count++;
-        } */
+        }
 
         let task_count = 0;
         //tasks
