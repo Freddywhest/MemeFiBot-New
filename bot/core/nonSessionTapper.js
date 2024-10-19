@@ -791,7 +791,9 @@ class NonSessionTapper {
                       const get_codes = await this.api.get_codes();
                       if (!_.isEmpty(get_codes?.codes)) {
                         const SecretCode = get_codes.codes.filter((code) =>
-                          get_task_by_id?.name.startsWith(code.name)
+                          get_task_by_id?.name
+                            ?.toLowerCase()
+                            ?.startsWith(code.name?.toLowerCase())
                         );
 
                         if (_.isEmpty(SecretCode)) {
