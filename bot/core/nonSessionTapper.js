@@ -792,6 +792,8 @@ class NonSessionTapper {
                     task?.id
                   );
 
+                  let r_data = {};
+
                   if (!_.isEmpty(get_task_by_id)) {
                     if (get_task_by_id?.taskVerificationType == "SecretCode") {
                       if (!_.isEmpty(get_codes?.codes)) {
@@ -807,6 +809,10 @@ class NonSessionTapper {
                           );
                           continue;
                         }
+                        r_data = {
+                          userTaskId: get_task_by_id?.userTaskId,
+                          verificationCode: SecretCode?.code,
+                        };
                       } else {
                         logger.info(
                           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task requires verification code but no codes found. Skipping...`
@@ -834,7 +840,7 @@ class NonSessionTapper {
 
                     const claim_task = await this.api.complete_task(
                       http_client,
-                      get_task_by_id?.userTaskId
+                      r_data
                     );
 
                     if (!_.isEmpty(claim_task)) {
