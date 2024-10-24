@@ -739,6 +739,7 @@ class NonSessionTapper {
         }
 
         let task_count = 0;
+        let get_codes;
         //tasks
         if (settings.AUTO_COMPLETE_TASKS) {
           const campaigns = await this.api.get_campaigns(http_client);
