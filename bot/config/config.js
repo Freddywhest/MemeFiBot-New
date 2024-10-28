@@ -120,7 +120,11 @@ const settings = {
 
   USE_CODES_FROM_FILE: process.env.USE_CODES_FROM_FILE
     ? process.env.USE_CODES_FROM_FILE.toLowerCase() === "true"
-    : false,
+    : true,
+
+  AUTO_TAPPING: process.env.AUTO_TAPPING
+    ? process.env.AUTO_TAPPING.toLowerCase() === "true"
+    : true,
 };
 
 module.exports = settings;

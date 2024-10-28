@@ -769,131 +769,133 @@ class Tapper {
 
         //normal tapping
         let tap_count = 0;
-        while (
-          _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
-          _.lte(tap_count, 10)
-        ) {
-          const tap_sleep = _.random(
-            settings.DELAY_BETWEEN_TAPS[0],
-            settings.DELAY_BETWEEN_TAPS[1]
-          );
-          logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${tap_sleep} seconds before tapping...`
-          );
-          await sleep(tap_sleep);
-          if (_.lte(boss_current_health, 0)) {
-            const new_boss = await this.#set_new_boss(http_client);
-            if (
-              !_.isEmpty(new_boss) &&
-              !_.isNull(new_boss) &&
-              !_.isUndefined(new_boss)
-            ) {
-              game_config = new_boss;
-              balance = game_config?.coinsAmount;
-              boss_current_health = game_config?.currentBoss?.currentHealth;
-              await sleep(_.random(15, 25));
-            } else {
-              break;
-            }
-          }
-          let normal_taps;
-          if (
-            _.isInteger(settings.RANDOM_TAPS[0]) &&
-            _.isInteger(settings.RANDOM_TAPS[1])
+        if (settings.AUTO_TAPPING) {
+          while (
+            _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
+            _.lte(tap_count, 10)
           ) {
-            normal_taps = _.random(
-              settings.RANDOM_TAPS[0],
-              settings.RANDOM_TAPS[1]
+            const tap_sleep = _.random(
+              settings.DELAY_BETWEEN_TAPS[0],
+              settings.DELAY_BETWEEN_TAPS[1]
             );
-          } else {
-            normal_taps = _.random(50, 200);
-          }
-
-          if (_.gt(normal_taps, _.divide(available_energy, tap_level))) {
-            normal_taps = _.floor(_.divide(available_energy, tap_level));
-          }
-
-          nonce = game_config?.nonce;
-
-          const data = {
-            payload: {
-              nonce,
-              tapsCount: normal_taps,
-              vector: generateVectorArray(normal_taps),
-            },
-          };
-
-          const old_balance = balance;
-
-          const tap_result = await this.api.send_taps(http_client, data);
-          if (
-            !_.isEmpty(tap_result) &&
-            !_.isNull(tap_result) &&
-            !_.isUndefined(tap_result)
-          ) {
-            game_config = tap_result;
-            balance = game_config?.coinsAmount;
-            available_energy = game_config?.currentEnergy;
-            const added_coins = _.subtract(balance, old_balance);
-            boss_current_health = game_config?.currentBoss?.currentHealth;
-            energy_boost_count =
-              game_config?.freeBoosts?.currentRefillEnergyAmount;
-            if (added_coins > 0) {
-              logger.success(
-                `<ye>[${this.bot_name}]</ye> | ${
-                  this.session_name
-                } | 🔨 Successful tapped | Balance: <pi>${Number(
-                  balance
-                ).toLocaleString()}</pi> (<gr>+${Number(
-                  added_coins
-                ).toLocaleString()}</gr>) | Boss health: <vo>${Number(
-                  boss_current_health
-                ).toLocaleString()}</vo>`
-              );
-            } else {
-              logger.info(
-                `<ye>[${this.bot_name}]</ye> | ${
-                  this.session_name
-                } | 🔨 Successful tapped | Balance: <pi>${Number(
-                  balance
-                ).toLocaleString()}</pi> | Boss health: <vo>${Number(
-                  boss_current_health
-                ).toLocaleString()}</vo>`
-              );
-            }
-          }
-
-          if (
-            settings.AUTO_APPLY_ENERGY &&
-            _.gte(energy_boost_count, 1) &&
-            _.lte(available_energy, _.divide(max_energy, 2))
-          ) {
             logger.info(
-              `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 5 seconds before applying energy boost...`
+              `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${tap_sleep} seconds before tapping...`
             );
-            await sleep(_.random(5, 10));
-            const apply_energy = await this.api.apply_boost(
-              http_client,
-              FreeBoostType.ENERGY
-            );
-
+            await sleep(tap_sleep);
+            if (_.lte(boss_current_health, 0)) {
+              const new_boss = await this.#set_new_boss(http_client);
+              if (
+                !_.isEmpty(new_boss) &&
+                !_.isNull(new_boss) &&
+                !_.isUndefined(new_boss)
+              ) {
+                game_config = new_boss;
+                balance = game_config?.coinsAmount;
+                boss_current_health = game_config?.currentBoss?.currentHealth;
+                await sleep(_.random(15, 25));
+              } else {
+                break;
+              }
+            }
+            let normal_taps;
             if (
-              !_.isEmpty(apply_energy) &&
-              !_.isNull(apply_energy) &&
-              !_.isUndefined(apply_energy)
+              _.isInteger(settings.RANDOM_TAPS[0]) &&
+              _.isInteger(settings.RANDOM_TAPS[1])
             ) {
-              game_config = apply_energy;
+              normal_taps = _.random(
+                settings.RANDOM_TAPS[0],
+                settings.RANDOM_TAPS[1]
+              );
+            } else {
+              normal_taps = _.random(50, 200);
+            }
+
+            if (_.gt(normal_taps, _.divide(available_energy, tap_level))) {
+              normal_taps = _.floor(_.divide(available_energy, tap_level));
+            }
+
+            nonce = game_config?.nonce;
+
+            const data = {
+              payload: {
+                nonce,
+                tapsCount: normal_taps,
+                vector: generateVectorArray(normal_taps),
+              },
+            };
+
+            const old_balance = balance;
+
+            const tap_result = await this.api.send_taps(http_client, data);
+            if (
+              !_.isEmpty(tap_result) &&
+              !_.isNull(tap_result) &&
+              !_.isUndefined(tap_result)
+            ) {
+              game_config = tap_result;
               balance = game_config?.coinsAmount;
               available_energy = game_config?.currentEnergy;
+              const added_coins = _.subtract(balance, old_balance);
+              boss_current_health = game_config?.currentBoss?.currentHealth;
               energy_boost_count =
                 game_config?.freeBoosts?.currentRefillEnergyAmount;
-              logger.success(
-                `<ye>[${this.bot_name}]</ye> | ${this.session_name} | 🔋 Energy boost applied`
-              );
+              if (added_coins > 0) {
+                logger.success(
+                  `<ye>[${this.bot_name}]</ye> | ${
+                    this.session_name
+                  } | 🔨 Successful tapped | Balance: <pi>${Number(
+                    balance
+                  ).toLocaleString()}</pi> (<gr>+${Number(
+                    added_coins
+                  ).toLocaleString()}</gr>) | Boss health: <vo>${Number(
+                    boss_current_health
+                  ).toLocaleString()}</vo>`
+                );
+              } else {
+                logger.info(
+                  `<ye>[${this.bot_name}]</ye> | ${
+                    this.session_name
+                  } | 🔨 Successful tapped | Balance: <pi>${Number(
+                    balance
+                  ).toLocaleString()}</pi> | Boss health: <vo>${Number(
+                    boss_current_health
+                  ).toLocaleString()}</vo>`
+                );
+              }
             }
-          }
 
-          tap_count++;
+            if (
+              settings.AUTO_APPLY_ENERGY &&
+              _.gte(energy_boost_count, 1) &&
+              _.lte(available_energy, _.divide(max_energy, 2))
+            ) {
+              logger.info(
+                `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for 5 seconds before applying energy boost...`
+              );
+              await sleep(_.random(5, 10));
+              const apply_energy = await this.api.apply_boost(
+                http_client,
+                FreeBoostType.ENERGY
+              );
+
+              if (
+                !_.isEmpty(apply_energy) &&
+                !_.isNull(apply_energy) &&
+                !_.isUndefined(apply_energy)
+              ) {
+                game_config = apply_energy;
+                balance = game_config?.coinsAmount;
+                available_energy = game_config?.currentEnergy;
+                energy_boost_count =
+                  game_config?.freeBoosts?.currentRefillEnergyAmount;
+                logger.success(
+                  `<ye>[${this.bot_name}]</ye> | ${this.session_name} | 🔋 Energy boost applied`
+                );
+              }
+            }
+
+            tap_count++;
+          }
         }
 
         let task_count = 0;
@@ -955,15 +957,18 @@ class Tapper {
                   if (!_.isEmpty(get_task_by_id)) {
                     if (get_task_by_id?.taskVerificationType == "SecretCode") {
                       if (!_.isEmpty(get_codes?.codes)) {
-                        const SecretCode = get_codes.codes.filter((code) =>
-                          get_task_by_id?.name
-                            ?.toLowerCase()
-                            ?.startsWith(code.name?.toLowerCase())
+                        const normalizeString = (str) =>
+                          str?.replace(/\s+/g, " ").trim();
+
+                        const SecretCode = get_codes.codes.find((code) =>
+                          normalizeString(get_task_by_id?.name)
+                            .toLowerCase()
+                            .includes(normalizeString(code.name)?.toLowerCase())
                         );
 
                         if (_.isEmpty(SecretCode)) {
                           logger.info(
-                            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task requires verification code but no codes found. Skipping...`
+                            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task <la>[${get_task_by_id?.name}]</la> requires verification code but no codes found. Skipping...`
                           );
                           continue;
                         }
@@ -973,7 +978,7 @@ class Tapper {
                         };
                       } else {
                         logger.info(
-                          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task requires verification code but no codes found. Skipping...`
+                          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Task <la>[${get_task_by_id?.name}]</la> requires verification code but no codes found. Skipping...`
                         );
                         continue;
                       }
