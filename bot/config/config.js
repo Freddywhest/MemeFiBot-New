@@ -101,6 +101,12 @@ const settings = {
       ? JSON.parse(process.env.DELAY_BETWEEN_TASKS)
       : [10, 50],
 
+  SLEEP_BETWEEN_NON_THREADS:
+    process.env.SLEEP_BETWEEN_NON_THREADS &&
+    _isArray(process.env.SLEEP_BETWEEN_NON_THREADS)
+      ? JSON.parse(process.env.SLEEP_BETWEEN_NON_THREADS)
+      : [1000, 3000],
+
   USE_PROXY_FROM_JS_FILE: process.env.USE_PROXY_FROM_JS_FILE
     ? process.env.USE_PROXY_FROM_JS_FILE.toLowerCase() === "true"
     : false,
@@ -124,6 +130,21 @@ const settings = {
 
   AUTO_TAPPING: process.env.AUTO_TAPPING
     ? process.env.AUTO_TAPPING.toLowerCase() === "true"
+    : true,
+
+  MAX_CONCURRENT_ACCOUNT:
+    process.env.MAX_CONCURRENT_ACCOUNT &&
+    /^\d+$/.test(process.env.MAX_CONCURRENT_ACCOUNT)
+      ? parseInt(process.env.MAX_CONCURRENT_ACCOUNT)
+      : 5,
+
+  RUN_COUNT:
+    process.env.RUN_COUNT && /^\d+$/.test(process.env.RUN_COUNT)
+      ? parseInt(process.env.RUN_COUNT)
+      : 1,
+
+  USE_NON_THREAD: process.env.USE_NON_THREAD
+    ? process.env.USE_NON_THREAD.toLowerCase() === "true"
     : true,
 };
 
