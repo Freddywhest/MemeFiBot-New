@@ -16,6 +16,7 @@ const fdy = require("fdy-scraping");
 const FdyTmp = require("fdy-tmp");
 const { UpgradableBoostType, FreeBoostType } = require("../utils/boost");
 const { calculatePrice, generateVectorArray } = require("../utils/helper");
+const { checkUrls } = require("../utils/assetsChecker");
 
 class Tapper {
   constructor(tg_client) {
@@ -316,6 +317,7 @@ class Tapper {
     let profile_data;
     let game_config;
     let tapbot_config;
+    let runCount = 0;
 
     if (
       (settings.USE_PROXY_FROM_TXT_FILE || settings.USE_PROXY_FROM_JS_FILE) &&
@@ -336,10 +338,12 @@ class Tapper {
         headers: this.headers,
       });
     }
-    while (true) {
+    await checkUrls(this.bot_name, this.session_name);
+    while (runCount < settings.RUN_COUNT) {
       try {
         const currentTime = _.floor(Date.now() / 1000);
         if (currentTime - access_token_created_time >= 3600) {
+          await checkUrls(this.bot_name, this.session_name);
           const platform = this.#get_platform(this.#get_user_agent());
           const tg_web_data = await this.#get_tg_web_data();
           if (
@@ -372,6 +376,7 @@ class Tapper {
           access_token_created_time = currentTime;
           await sleep(_.random(2, 6));
         }
+        await checkUrls(this.bot_name, this.session_name);
 
         profile_data = await this.api.profile_data(http_client);
         game_config = await this.api.game_data(http_client);
@@ -440,15 +445,21 @@ class Tapper {
           _.lt(spinning_count, 10) &&
           settings.AUTO_SPIN
         ) {
+          const totalTime = await checkUrls(this.bot_name, this.session_name);
           const spin_sleep = _.add(
             sleep.generateDelays(10)[_.random(0, 9)],
             _.random(12, 30)
           );
+
+          const sleep_spin_t =
+            _.subtract(spin_sleep, totalTime) > 0
+              ? _.round(_.subtract(spin_sleep, totalTime))
+              : 0;
           logger.info(
-            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${spin_sleep} seconds before spinning slot machine`
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${sleep_spin_t} seconds before spinning slot machine`
           );
 
-          await sleep(spin_sleep);
+          await sleep(sleep_spin_t);
           //spin slot machine
           if (_.lte(boss_current_health, 0)) {
             const new_boss = await this.#set_new_boss(http_client);
@@ -548,6 +559,7 @@ class Tapper {
           _.gte(balance, 200000) &&
           settings.AUTO_BUY_TAPBOT
         ) {
+          await checkUrls(this.bot_name, this.session_name);
           const purchase_tapbot = await this.api.upgrade_boost(
             http_client,
             UpgradableBoostType.TAPBOT
@@ -576,6 +588,7 @@ class Tapper {
           tapbot_config?.isPurchased == true &&
           settings.AUTO_CLAIM_AND_START_TAPBOT
         ) {
+          await checkUrls(this.bot_name, this.session_name);
           if (
             !_.isNull(tapbot_config?.endsAt) &&
             !_.isUndefined(tapbot_config?.endsAt) &&
@@ -598,6 +611,7 @@ class Tapper {
             _.isNull(tapbot_config?.endsAt) &&
             _.gt(tapbot_config?.totalAttempts, tapbot_config?.usedAttempts)
           ) {
+            await checkUrls(this.bot_name, this.session_name);
             const start_tapbot = await this.api.start_tapbot(http_client);
             if (
               !_.isEmpty(start_tapbot) &&
@@ -774,14 +788,20 @@ class Tapper {
             _.gt(available_energy, settings.MIN_AVAILABLE_ENERGY) &&
             _.lte(tap_count, 10)
           ) {
+            const totalTime = await checkUrls(this.bot_name, this.session_name);
             const tap_sleep = _.random(
               settings.DELAY_BETWEEN_TAPS[0],
               settings.DELAY_BETWEEN_TAPS[1]
             );
+            const sleep_time_tap =
+              _.subtract(tap_sleep, totalTime) < 1
+                ? 0
+                : _.round(_.subtract(tap_sleep, totalTime));
+
             logger.info(
-              `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${tap_sleep} seconds before tapping...`
+              `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${sleep_time_tap} seconds before tapping...`
             );
-            await sleep(tap_sleep);
+            await sleep(sleep_time_tap);
             if (_.lte(boss_current_health, 0)) {
               const new_boss = await this.#set_new_boss(http_client);
               if (
@@ -918,16 +938,25 @@ class Tapper {
                 http_client,
                 campaign?.id
               );
+              const totalTime = await checkUrls(
+                this.bot_name,
+                this.session_name
+              );
 
               const campaign_sleep = _.random(
                 settings.DELAY_BETWEEN_TASKS[0],
                 settings.DELAY_BETWEEN_TASKS[1]
               );
+              const sleep_time_task =
+                _.subtract(campaign_sleep, totalTime) < 1
+                  ? 0
+                  : _.round(_.subtract(campaign_sleep, totalTime));
+
               logger.info(
-                `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${campaign_sleep} seconds before getting tasks...`
+                `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${sleep_time_task} seconds before getting tasks...`
               );
 
-              await sleep(campaign_sleep);
+              await sleep(sleep_time_task);
 
               if (!_.isEmpty(get_tasks_list)) {
                 for (const task of get_tasks_list) {
@@ -1034,10 +1063,12 @@ class Tapper {
           settings.AUTO_UPGRADE_DAMAGE &&
           _.lt(tap_level, settings.MAX_DAMAGE_LEVEL)
         ) {
+          await checkUrls(this.bot_name, this.session_name);
           const upgrade_tap = await this.api.upgrade_boost(
             http_client,
             UpgradableBoostType.TAP
           );
+
           if (
             !_.isEmpty(upgrade_tap) &&
             !_.isNull(upgrade_tap) &&
@@ -1062,6 +1093,7 @@ class Tapper {
           settings.AUTO_UPGRADE_ENERGY &&
           _.lt(energy_level, settings.MAX_ENERGY_LEVEL)
         ) {
+          await checkUrls(this.bot_name, this.session_name);
           const upgrade_energy = await this.api.upgrade_boost(
             http_client,
             UpgradableBoostType.ENERGY
@@ -1090,6 +1122,7 @@ class Tapper {
           _.lt(charge_level, 3) &&
           settings.AUTO_UPGRADE_RECHARGE
         ) {
+          await checkUrls(this.bot_name, this.session_name);
           const upgrade_charge = await this.api.upgrade_boost(
             http_client,
             UpgradableBoostType.CHARGE
@@ -1112,35 +1145,40 @@ class Tapper {
           }
           await sleep(_.random(5, 15));
         }
+        await checkUrls(this.bot_name, this.session_name);
       } catch (error) {
         logger.error(
           `<ye>[${this.bot_name}]</ye> | ${this.session_name} | ❗️Unknown error: ${error}`
         );
       } finally {
-        let ran_sleep;
-        if (_isArray(settings.SLEEP_BETWEEN_REQUESTS)) {
-          if (
-            _.isInteger(settings.SLEEP_BETWEEN_REQUESTS[0]) &&
-            _.isInteger(settings.SLEEP_BETWEEN_REQUESTS[1])
-          ) {
-            ran_sleep = _.random(
-              settings.SLEEP_BETWEEN_REQUESTS[0],
-              settings.SLEEP_BETWEEN_REQUESTS[1]
-            );
+        if (settings.USE_NON_THREAD) {
+          runCount++;
+        } else {
+          let ran_sleep;
+          if (_isArray(settings.SLEEP_BETWEEN_REQUESTS)) {
+            if (
+              _.isInteger(settings.SLEEP_BETWEEN_REQUESTS[0]) &&
+              _.isInteger(settings.SLEEP_BETWEEN_REQUESTS[1])
+            ) {
+              ran_sleep = _.random(
+                settings.SLEEP_BETWEEN_REQUESTS[0],
+                settings.SLEEP_BETWEEN_REQUESTS[1]
+              );
+            } else {
+              ran_sleep = _.random(450, 800);
+            }
+          } else if (_.isInteger(settings.SLEEP_BETWEEN_REQUESTS)) {
+            const ran_add = _.random(20, 50);
+            ran_sleep = settings.SLEEP_BETWEEN_REQUESTS + ran_add;
           } else {
             ran_sleep = _.random(450, 800);
           }
-        } else if (_.isInteger(settings.SLEEP_BETWEEN_REQUESTS)) {
-          const ran_add = _.random(20, 50);
-          ran_sleep = settings.SLEEP_BETWEEN_REQUESTS + ran_add;
-        } else {
-          ran_sleep = _.random(450, 800);
-        }
 
-        logger.info(
-          `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${ran_sleep} seconds...`
-        );
-        await sleep(ran_sleep);
+          logger.info(
+            `<ye>[${this.bot_name}]</ye> | ${this.session_name} | Sleeping for ${ran_sleep} seconds...`
+          );
+          await sleep(ran_sleep);
+        }
       }
     }
   }

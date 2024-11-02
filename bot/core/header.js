@@ -15,6 +15,10 @@ const headers = {
   "x-requested-with": "org.telegram.messenger.web",
   priority: "u=1, i",
   referer: "https://tg-app.memefi.club/",
+  Priority: "u=1, i",
+  "Sec-Ch-Ua":
+    '"Chromium";v="130", "Android WebView";v="130", "Not?A_Brand";v="99"',
+  "Sec-Ch-Ua-Platform": '"Android"',
 };
 
 module.exports = headers;
